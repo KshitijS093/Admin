@@ -72,7 +72,6 @@ export default function Flights() {
         <table className="flight-table">
           <thead>
             <tr>
-              <th>Flight ID</th>
               <th>Flight Number</th>
               <th>Origin</th>
               <th>Destination</th>
