@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import "./Landing.css";
+import "./Services.css";
 
 type Passenger = {
   passengerId: number;
@@ -189,129 +192,141 @@ export default function ManagePassengers({
   if (error) return <h2 className="text-red-500">{error}</h2>;
 
   return (
-    <div className="p-4 flex gap-6">
-      {/* Passenger List */}
-      <div className="w-1/3">
-        <button
-          onClick={onBack}
-          className="mb-4 px-3 py-1 border rounded-lg bg-gray-200 hover:bg-gray-300"
-        >
-          ⬅ Back
-        </button>
-
-        <h2 className="text-xl font-bold mb-2">Passengers</h2>
-
-        <button
-          onClick={() => setFilterMissing(!filterMissing)}
-          className="mb-4 px-2 py-1 border rounded bg-yellow-200 hover:bg-yellow-300"
-        >
-          {filterMissing ? "Show All" : "Show Missing Details"}
-        </button>
-
-        <div className="space-y-2 max-h-[600px] overflow-y-auto">
-          {displayedPassengers.map((p) => (
-            <button
-              key={p.passengerId}
-              className={`w-full text-left border rounded-lg p-2 hover:bg-gray-100 ${
-                selectedPassenger?.passengerId === p.passengerId ? "bg-gray-200" : "bg-white"
-              }`}
-              onClick={() => handleSelectPassenger(p)}
-            >
-              {p.name} — Seat {p.seatNumber ?? "Unassigned"}
-            </button>
-          ))}
+    <div className="p-4">
+      <motion.nav className="navbar" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+        <div className="navbar-left">
+          <h1 className="navbar-title">Passengers</h1>
+          <p className="navbar-subtitle">Manage passengers for this flight</p>
         </div>
-        <div className="flex flex-col items-center w-full">  
-        <button
-          onClick={() => {
-            setSelectedPassenger(null);
-            setShowForm(true);
-            setFormData({
-              name: "",
-              dob: "",
-              passportNumber: "",
-              address: "",
-              email: "",
-              phone: "",
-              seatNumber: undefined,
-              checkInStatus: "N",
-              wheelChair: "N",
-              infant: "N",
-            });
-          }}
-          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 w-full"
-        >
-          ➕ Add Passenger
-        </button>
-      </div>
+        <div className="navbar-right">
+          <button onClick={onBack} className="btn-back">⬅️ Back</button>
+        </div>
+      </motion.nav>
 
-      {/* Passenger Details / Add Form */}
-      <div className="w-2/3 border p-4 rounded-lg bg-gray-50">
-        {showForm ? (
-          <>
-            <h2 className="text-lg font-bold mb-2">Add New Passenger</h2>
-            <form className="space-y-2" onSubmit={handleAddPassenger}>
-              {Object.entries(formData).map(([key, value]) =>
-                key !== "passengerId" ? (
-                  <input
-                    key={key}
-                    name={key}
-                    value={value ?? ""}
-                    onChange={handleChange}
-                    placeholder={key}
-                    className="w-full border p-2 rounded"
-                  />
-                ) : null
-              )}
-              <button
-                type="submit"
-                className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+      <div className="flex gap-6 mt-4">
+        {/* Passenger List */}
+        <div className="w-1/3">
+          <h2 className="text-xl font-bold mb-2">Passengers</h2>
+
+          <button
+            onClick={() => setFilterMissing(!filterMissing)}
+            className="mb-4 px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+          >
+            {filterMissing ? "Show All" : "Show Missing Details"}
+          </button>
+
+          <div className="space-y-2 max-h-[600px] overflow-y-auto">
+            <AnimatePresence>
+              {displayedPassengers.map((p, idx) => (
+                <motion.button
+                  key={p.passengerId}
+                  className={`block w-full text-left border rounded p-3 hover:bg-gray-100 ${
+                    selectedPassenger?.passengerId === p.passengerId ? "bg-gray-200" : "bg-white"
+                  }`}
+                  onClick={() => handleSelectPassenger(p)}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 20 }}
+                  transition={{ delay: idx * 0.08, duration: 0.4 }}
+                >
+                  👤 {p.name} — Seat {p.seatNumber ?? "Unassigned"}
+                </motion.button>
+              ))}
+            </AnimatePresence>
+          </div>
+          <div className="flex flex-col items-center w-full">
+            <button
+              onClick={() => {
+                setSelectedPassenger(null);
+                setShowForm(true);
+                setFormData({
+                  name: "",
+                  dob: "",
+                  passportNumber: "",
+                  address: "",
+                  email: "",
+                  phone: "",
+                  seatNumber: undefined,
+                  checkInStatus: "N",
+                  wheelChair: "N",
+                  infant: "N",
+                });
+              }}
+              className="mt-4 btn-add w-full"
+            >
+              ➕ Add Passenger
+            </button>
+          </div>
+        </div>
+
+        {/* Passenger Details / Add Form */}
+        <div className="w-2/3">
+          <AnimatePresence>
+            {showForm && (
+              <motion.div
+                key="add-passenger"
+                initial={{ opacity: 0, y: 20, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 20, scale: 0.98 }}
+                transition={{ type: "spring", stiffness: 260, damping: 20 }}
+                className="p-6 rounded-2xl border border-indigo-100 shadow-xl bg-gradient-to-br from-white to-indigo-50/60 backdrop-blur-sm space-y-3"
               >
-                ✅ Add Passenger
-              </button>
-            </form>
-          </>
-        ) : selectedPassenger ? (
-          <>
-            <h2 className="text-lg font-bold mb-2">{selectedPassenger.name}</h2>
-            <p className="mb-2">
-              Flight: {flight?.flightNumber} ({flight?.origin} → {flight?.destination})
-            </p>
-
-            <div className="space-y-1">
-              {Object.entries(formData).map(([key, value]) =>
-              key !== "passengerId" ? (
-                <div key={key} className="flex items-center gap-2">
-                  <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong>
-                  <input
-                    name={key}
-                    value={value ?? ""}
-                    onChange={handleChange}
-                    className="border p-1 rounded flex-1"
-                  />
-                </div>
-              ) : null
+                <h2 className="text-lg font-bold">Add New Passenger</h2>
+                <form className="space-y-2" onSubmit={handleAddPassenger}>
+                  {Object.entries(formData).map(([key, value]) =>
+                    key !== "passengerId" ? (
+                      <input
+                        key={key}
+                        name={key}
+                        value={value ?? ""}
+                        onChange={handleChange}
+                        placeholder={key}
+                        className="w-full border rounded px-2 py-1"
+                      />
+                    ) : null
+                  )}
+                  <div className="flex gap-2 mt-2">
+                    <button type="submit" className="btn-add">✅ Add Passenger</button>
+                    <button type="button" onClick={() => setShowForm(false)} className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Cancel</button>
+                  </div>
+                </form>
+              </motion.div>
             )}
 
-            </div>
-
-            <div className="flex gap-2 mt-2">
-              <button
-                onClick={handleUpdatePassenger}
-                className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+            {!showForm && selectedPassenger && (
+              <motion.div
+                key={selectedPassenger.passengerId}
+                initial={{ opacity: 0, y: 20, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 20, scale: 0.98 }}
+                transition={{ type: "spring", stiffness: 260, damping: 20 }}
+                className="p-6 rounded-2xl border border-indigo-100 shadow-xl bg-gradient-to-br from-white to-indigo-50/60 backdrop-blur-sm space-y-2 min-h-[220px]"
               >
-                Update
-              </button>
-              <button
-                onClick={handleDeletePassenger}
-                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-              >
-                Delete
-              </button>
-            </div>
-          </>
-        ) : null}
-      </div>
+                <h2 className="text-lg font-bold">{selectedPassenger.name}</h2>
+                <p className="mb-2">Flight: {flight?.flightNumber} ({flight?.origin} → {flight?.destination})</p>
+                <div className="space-y-1">
+                  {Object.entries(formData).map(([key, value]) =>
+                    key !== "passengerId" ? (
+                      <div key={key} className="flex items-center gap-2">
+                        <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong>
+                        <input
+                          name={key}
+                          value={value ?? ""}
+                          onChange={handleChange}
+                          className="border p-1 rounded flex-1"
+                        />
+                      </div>
+                    ) : null
+                  )}
+                </div>
+                <div className="flex gap-2 mt-2">
+                  <button onClick={handleUpdatePassenger} className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Update</button>
+                  <button onClick={handleDeletePassenger} className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Delete</button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
     </div>
   );

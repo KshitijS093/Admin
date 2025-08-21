@@ -2,7 +2,7 @@ import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Flights from "./components/Flights";
 import FlightDetails from "./components/FlightDetails";
-import Passengers from "./components/ManagePassengers";
+import Passengers from "./components/Passengers";
 import Ancillary from "./components/Ancillary";
 import Meals from "./components/Meals";
 import ShopItems from "./components/ShopItems";
