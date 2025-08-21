@@ -77,14 +77,8 @@ export default function FlightDetails() {
     <motion.div className="landing-page" variants={containerVariants} initial="hidden" animate="visible">
       <motion.nav className="navbar" variants={itemVariants} initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
         <div className="navbar-left">
-          <h1 className="navbar-title">Inflight Services</h1>
-          <p className="navbar-subtitle">Manage ancillary, meals, and in-flight shop</p>
-        </div>
-        <div className="navbar-right">
-          <div className="flight-id-display">
-            <span className="flight-id-label">Flight ID :</span>
-            <input type="number" className="flight-id-input-navbar" value={flightId ?? ""} readOnly />
-          </div>
+          <h1 className="navbar-title">Admin Services</h1>
+          <p className="navbar-subtitle">Manage meals, shop, ancillary and passengers.</p>
         </div>
       </motion.nav>
 
@@ -94,16 +88,16 @@ export default function FlightDetails() {
           <div className="flight-route">{loading ? "Loading route..." : flight ? `${flight.origin} → ${flight.destination}` : "-"}</div>
           <div className="flight-info">
             <div className="departure-info">
-              <div className="departure-label">Departure Time</div>
+              <div className="departure-label" style={{ fontWeight: 'bold' }}>Departure Time</div>
               <div className="date">{dep.date}</div>
               <div className="time">{dep.time}</div>
             </div>
             <div className="aircraft-info">
-              <div className="aircraft-label">Aircraft</div>
+              <div className="aircraft-label" style={{ fontWeight: 'bold' }}>Aircraft</div>
               <div className="aircraft-id">{flight?.aircraftId ? `ID ${flight.aircraftId}` : "N/A"}</div>
             </div>
             <div className="arrival-info">
-              <div className="arrival-label">Arrival Time</div>
+              <div className="arrival-label" style={{ fontWeight: 'bold' }}>Arrival Time</div>
               <div className="date">{arr.date}</div>
               <div className="time">{arr.time}</div>
             </div>
