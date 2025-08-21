@@ -221,7 +221,7 @@ export default function ManagePassengers({
             </button>
           ))}
         </div>
-
+        <div className="flex flex-col items-center w-full">  
         <button
           onClick={() => {
             setSelectedPassenger(null);
@@ -310,9 +310,8 @@ export default function ManagePassengers({
               </button>
             </div>
           </>
-        ) : (
-          <h2 className="text-gray-500">No Passenger Selected</h2>
-        )}
+        ) : null}
+      </div>
       </div>
     </div>
   );
