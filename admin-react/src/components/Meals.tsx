@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 type MealType = {
   mealId: number;
@@ -166,15 +167,21 @@ export default function Meals({ flightId, onBack }: Props) {
       )}
 
       <div className="space-y-2">
-        {meals.map((meal) => (
-          <button
-            key={meal.mealId}
-            className="block w-full text-left border rounded p-3 hover:bg-gray-100"
-            onClick={() => setSelectedMeal(selectedMeal === meal ? null : meal)}
-          >
-            {meal.name} — <em>{meal.type}</em>
-          </button>
-        ))}
+        <AnimatePresence>
+          {meals.map((meal, idx) => (
+            <motion.button
+              key={meal.mealId}
+              className="block w-full text-left border rounded p-3 hover:bg-gray-100"
+              onClick={() => setSelectedMeal(selectedMeal === meal ? null : meal)}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ delay: idx * 0.08, duration: 0.4 }}
+            >
+              {meal.name} — <em>{meal.type}</em>
+            </motion.button>
+          ))}
+        </AnimatePresence>
       </div>
 
       {selectedMeal && (

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 type AncillaryType = {
   flightId: number;
@@ -124,21 +125,27 @@ export default function Ancillary({ flightId, onBack }: Props) {
 
       {/* List of services */}
       <div className="space-y-2 mb-4">
-        {ancillaryServices.length === 0 ? (
-          <p>No ancillary services found.</p>
-        ) : (
-          ancillaryServices.map((s) => (
-            <button
-              key={s.serviceId}
-              onClick={() => handleSelect(s)}
-              className={`block w-full text-left border rounded-lg p-2 hover:bg-gray-100 ${
-                selectedService?.serviceId === s.serviceId ? "bg-gray-200" : "bg-white"
-              }`}
-            >
-              🛄 {s.name} (ID: {s.serviceId})
-            </button>
-          ))
-        )}
+        <AnimatePresence>
+          {ancillaryServices.length === 0 ? (
+            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              No ancillary services found.
+            </motion.p>
+          ) : (
+            ancillaryServices.map((s, idx) => (
+              <motion.button
+                key={s.serviceId}
+                onClick={() => handleSelect(s)}
+                className={`block w-full text-left border rounded-lg p-2 hover:bg-gray-100 ${selectedService?.serviceId === s.serviceId ? "bg-gray-200" : "bg-white"}`}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={{ delay: idx * 0.08, duration: 0.4 }}
+              >
+                🛄 {s.name} (ID: {s.serviceId})
+              </motion.button>
+            ))
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Selected service details */}

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 type ShopItem = {
   item_id: number;
@@ -105,15 +106,21 @@ export default function ShopItems({ flightId, onBack }: { flightId: number; onBa
       <h2 className="text-xl font-semibold mb-2">Shop Items</h2>
 
       <div className="space-y-2">
-        {items.map((item) => (
-          <button
-            key={item.item_id}
-            className="block w-full text-left border rounded p-3 hover:bg-gray-100"
-            onClick={() => setSelectedItem(item)}
-          >
-            🛍 {item.name} — ₹{item.price} ({item.available_onboard === "Y" ? "Available" : "Not Available"})
-          </button>
-        ))}
+        <AnimatePresence>
+          {items.map((item, idx) => (
+            <motion.button
+              key={item.item_id}
+              className="block w-full text-left border rounded p-3 hover:bg-gray-100"
+              onClick={() => setSelectedItem(item)}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ delay: idx * 0.08, duration: 0.4 }}
+            >
+              🛍 {item.name} — ₹{item.price} ({item.available_onboard === "Y" ? "Available" : "Not Available"})
+            </motion.button>
+          ))}
+        </AnimatePresence>
       </div>
 
       {/* Add New Item button */}
