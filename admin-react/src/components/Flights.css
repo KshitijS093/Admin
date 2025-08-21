@@ -59,3 +59,127 @@
   transform: scale(1.01);
   transition: all 0.2s ease-in-out;
 }
+
+/* Landing page */
+.landing-page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #F8FBFF 0%, #F2F7FD 100%);
+  display: flex;
+  flex-direction: column;
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 32px;
+}
+
+.navbar-title {
+  margin: 0;
+  font-size: 28px;
+  color: #0D47A1;
+}
+
+.navbar-subtitle {
+  margin: 4px 0 0 0;
+  color: #5177a7;
+}
+
+.illustration-section {
+  display: flex;
+  justify-content: center;
+  padding: 24px;
+  margin-top: 100px;
+  margin-bottom: 50px;
+}
+
+.flight-details-card {
+  width: 100%;
+  max-width: 900px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 12px 24px rgba(13, 71, 161, 0.08);
+  padding: 24px;
+}
+
+.flight-number {
+  margin: 0 0 4px 0;
+  color: #0D47A1;
+}
+
+.flight-route {
+  color: #4a6a95;
+  margin-bottom: 16px;
+}
+
+.flight-info {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 16px;
+  align-items: center;
+}
+
+.departure-info .departure-label,
+.arrival-info .arrival-label,
+.aircraft-label {
+  font-size: 0.8rem;
+  color: #1e3a8a;
+  margin-bottom: 0.25rem;
+}
+
+.aircraft-info {
+  text-align: center;
+  flex: 1;
+  border-left: 1px solid #e5e7eb;
+  border-right: 1px solid #e5e7eb;
+  padding: 0 1rem;
+}
+
+.aircraft-id {
+  font-size: 0.9rem;
+  color: #1e3a8a;
+  font-weight: 600;
+}
+
+.departure-info .date,
+.arrival-info .date {
+  color: #2a3c57;
+}
+
+.departure-info .time,
+.arrival-info .time {
+  color: #5d7aa4;
+}
+
+.aircraft-info {
+    border-left: none;
+    border-right: none;
+    border-top: 1px solid #e5e7eb;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 1rem 0;
+}
+
+.service-buttons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  padding: 24px;
+}
+
+.service-link { text-decoration: none; }
+
+.service-button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  color: white;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+}
+
+.meal-button { background: linear-gradient(135deg, #FF6B6B, #FF8E53); }
+.shop-button { background: linear-gradient(135deg, #4CAF50, #66BB6A); }
+.ancillary-button { background: linear-gradient(135deg, #42A5F5, #5C6BC0); }
+.passengers-button { background: linear-gradient(135deg, #8E24AA, #AB47BC); }

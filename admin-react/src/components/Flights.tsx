@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import FlightDetails from "./FlightDetails";
 import './Flights.css';
+import { useNavigate } from "react-router-dom";
 
 type Flight = {
   flightId: number;
@@ -12,9 +12,10 @@ type Flight = {
   aircraftId: number;
 };
 
-function FlightRow({ flight, onSelect }: { flight: Flight; onSelect: (f: Flight) => void }) {
+function FlightRow({ flight }: { flight: Flight }) {
+  const navigate = useNavigate();
   return (
-    <tr onClick={() => onSelect(flight)} style={{ cursor: "pointer" }}>
+    <tr onClick={() => navigate(`/flight/${flight.flightId}`)} style={{ cursor: "pointer" }}>
       <td>{flight.flightId}</td>
       <td>{flight.flightNumber}</td>
       <td>{flight.origin}</td>
@@ -28,7 +29,6 @@ function FlightRow({ flight, onSelect }: { flight: Flight; onSelect: (f: Flight)
 export default function Flights() {
   const [flights, setFlights] = useState<Flight[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null);
 
   useEffect(() => {
     const fetchFlights = async () => {
@@ -54,17 +54,12 @@ export default function Flights() {
     );
   }
 
-  if (!selectedFlight && flights.length === 0) {
+  if (flights.length === 0) {
     return (
       <div className="admin-container">
         <p className="admin-subtext">No flights found.</p>
       </div>
     );
-  }
-
-  // ✅ Show FlightDetails page when a flight is selected
-  if (selectedFlight) {
-    return <FlightDetails flight={selectedFlight} onBack={() => setSelectedFlight(null)} />;
   }
 
   // ✅ Default flight list view
@@ -77,7 +72,7 @@ export default function Flights() {
         <table className="flight-table">
           <thead>
             <tr>
-              <th>Flight ID</th>
+              <th>S.No.</th>
               <th>Flight Number</th>
               <th>Origin</th>
               <th>Destination</th>
@@ -87,7 +82,7 @@ export default function Flights() {
           </thead>
           <tbody>
             {flights.map((flight) => (
-              <FlightRow key={flight.flightId} flight={flight} onSelect={setSelectedFlight} />
+              <FlightRow key={flight.flightId} flight={flight} />
             ))}
           </tbody>
         </table>

@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import "./Landing.css";
+import "./Services.css";
 
 type AncillaryType = {
   flightId: number;
@@ -112,38 +115,76 @@ export default function Ancillary({ flightId, onBack }: Props) {
   };
 
   return (
-    <div className="p-4 max-w-xl mx-auto">
-      <button
-        onClick={onBack}
-        className="mb-4 px-4 py-2 border rounded-lg bg-gray-200 hover:bg-gray-300"
+    <div className="p-4">
+      <motion.nav className="navbar" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+        <div className="navbar-left">
+          <h1 className="navbar-title">Ancillary</h1>
+          <p className="navbar-subtitle">Manage ancillary services</p>
+        </div>
+        <div className="navbar-right">
+          <button onClick={onBack} className="btn-back">⬅️ Back</button>
+        </div>
+      </motion.nav>
+
+      {/* Table of services */}
+      <motion.div
+        className="table-card mt-4"
+        initial={{ opacity: 0, y: 20, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ type: "spring", stiffness: 260, damping: 20 }}
       >
-        ⬅️ Back to Flight Options
-      </button>
+        <div className="table-toolbar">
+          <h3 className="table-title">Existing Services</h3>
+          <div className="table-actions">
+            {!showAddForm && (
+              <button onClick={() => setShowAddForm(true)} className="btn-add">➕ Add New Service</button>
+            )}
+          </div>
+        </div>
 
-      <h2 className="text-xl font-semibold mb-2">Ancillary Services</h2>
-
-      {/* List of services */}
-      <div className="space-y-2 mb-4">
-        {ancillaryServices.length === 0 ? (
-          <p>No ancillary services found.</p>
-        ) : (
-          ancillaryServices.map((s) => (
-            <button
-              key={s.serviceId}
-              onClick={() => handleSelect(s)}
-              className={`block w-full text-left border rounded-lg p-2 hover:bg-gray-100 ${
-                selectedService?.serviceId === s.serviceId ? "bg-gray-200" : "bg-white"
-              }`}
-            >
-              🛄 {s.name} (ID: {s.serviceId})
-            </button>
-          ))
-        )}
-      </div>
+        <div className="overflow-x-auto">
+          <motion.table className="styled-table" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <thead>
+              <tr>
+                <th>S.No.</th>
+                <th>Name</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <AnimatePresence>
+                {ancillaryServices.map((s, idx) => (
+                  <motion.tr
+                    key={s.serviceId}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -12 }}
+                    transition={{ delay: idx * 0.05, duration: 0.35 }}
+                    onClick={() => handleSelect(s)}
+                    className="cursor-pointer"
+                  >
+                    <td>{idx + 1}</td>
+                    <td>{s.name}</td>
+                    <td className="max-w-[520px] truncate" title={s.description}>{s.description}</td>
+                  </motion.tr>
+                ))}
+              </AnimatePresence>
+            </tbody>
+          </motion.table>
+        </div>
+      </motion.div>
 
       {/* Selected service details */}
+      <AnimatePresence>
       {selectedService && (
-        <div className="border p-4 rounded-lg mb-4 bg-gray-50 space-y-3">
+        <motion.div
+          key={selectedService.serviceId}
+          initial={{ opacity: 0, y: 20, scale: 0.98 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 20, scale: 0.98 }}
+          transition={{ type: "spring", stiffness: 260, damping: 20 }}
+          className="border p-6 rounded-2xl mb-4 border-indigo-100 shadow-xl bg-gradient-to-br from-white to-indigo-50/60 backdrop-blur-sm space-y-3 max-w-2xl w-full mx-auto min-h-[220px]"
+        >
           <h3 className="font-semibold">Service Details</h3>
           {editing ? (
             <div className="space-y-2">
@@ -168,10 +209,7 @@ export default function Ancillary({ flightId, onBack }: Props) {
                 />
               </div>
               <div className="flex gap-2">
-                <button
-                  onClick={handleUpdate}
-                  className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-                >
+                <button onClick={handleUpdate} className="btn-add">
                   Update
                 </button>
                 <button
@@ -203,59 +241,57 @@ export default function Ancillary({ flightId, onBack }: Props) {
               </div>
             </div>
           )}
-        </div>
+        </motion.div>
       )}
-
-      {/* Add New Service Button */}
-      {!showAddForm && (
-        <button
-          onClick={() => setShowAddForm(true)}
-          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 mb-4"
-        >
-          ➕ Add New Service
-        </button>
-      )}
-
-      {/* Add New Service Form */}
-      {showAddForm && (
-        <div className="border p-4 rounded-lg bg-gray-50 space-y-3">
-          <h3 className="font-semibold">Add New Service</h3>
-          <div>
-            <label className="block mb-1 font-medium">Name</label>
-            <input
-              name="name"
-              value={formData.name || ""}
-              onChange={handleChange}
-              placeholder="Service Name"
-              className="w-full border p-2 rounded"
-            />
-          </div>
-          <div>
-            <label className="block mb-1 font-medium">Description</label>
-            <textarea
-              name="description"
-              value={formData.description || ""}
-              onChange={handleChange}
-              placeholder="Description"
-              className="w-full border p-2 rounded"
-            />
-          </div>
-          <div className="flex gap-2">
-            <button
-              onClick={handleAdd}
-              className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-            >
-              Add Service
-            </button>
-            <button
+      {/* Add New Service Modal */}
+      <AnimatePresence>
+        {showAddForm && (
+          <div className="modal-container">
+            <motion.div
+              key="modal-backdrop"
+              className="modal-overlay"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
               onClick={() => setShowAddForm(false)}
-              className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+            />
+            <motion.div
+              key="add-service-modal"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="add-service-title"
+              className="modal"
+              initial={{ opacity: 0, y: 24, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 16, scale: 0.98 }}
+              transition={{ type: "spring", stiffness: 260, damping: 22 }}
             >
-              Cancel
-            </button>
+              <div className="modal-header">
+                <h3 id="add-service-title" className="modal-title">Add New Service</h3>
+                <button className="modal-close" aria-label="Close" onClick={() => setShowAddForm(false)}>×</button>
+              </div>
+              <div className="modal-body">
+                <div className="space-y-2">
+                  <div>
+                    <label className="block mb-1 font-medium">Name</label>
+                    <input name="name" value={formData.name || ""} onChange={handleChange} placeholder="Service Name" className="w-full border rounded px-2 py-1" />
+                  </div>
+                  <div>
+                    <label className="block mb-1 font-medium">Description</label>
+                    <textarea name="description" value={formData.description || ""} onChange={handleChange} placeholder="Description" className="w-full border rounded px-2 py-1" />
+                  </div>
+                </div>
+              </div>
+              <div className="modal-actions">
+                <button onClick={handleAdd} className="btn-add">Add Service</button>
+                <button onClick={() => setShowAddForm(false)} className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Cancel</button>
+              </div>
+            </motion.div>
           </div>
-        </div>
-      )}
+        )}
+      </AnimatePresence>
+      </AnimatePresence>
     </div>
   );
 }

@@ -17,7 +17,7 @@ import com.oracle.admin.returners.FlightAndPassenger;
 import com.oracle.admin.returners.SeatInfo;
 import com.oracle.admin.services.AdminService;
 
-@CrossOrigin(origins = "http://localhost:4000")
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/admin")
 public class AdminController {
